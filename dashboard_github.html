@@ -109,10 +109,11 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <div class="nav-tab active" id="tab-dashboard" onclick="switchTab('dashboard')">📊 لوحة المتابعة</div>
-    <div class="nav-tab" id="tab-links" onclick="switchTab('links')">🔗 روابط الجهات</div>
-    <div class="nav-tab" id="tab-certs" onclick="switchTab('certs')">📄 الشهادات والرخص</div>
-    <div class="nav-title">الالتزامات الحكومية</div>
+    <div class="nav-tab active" id="tab-dashboard" onclick="switchTab('dashboard')" data-ar="📊 لوحة المتابعة" data-en="📊 Dashboard">📊 لوحة المتابعة</div>
+    <div class="nav-tab" id="tab-links" onclick="switchTab('links')" data-ar="🔗 روابط الجهات" data-en="🔗 Entity Links">🔗 روابط الجهات</div>
+    <div class="nav-tab" id="tab-certs" onclick="switchTab('certs')" data-ar="📄 الشهادات والرخص" data-en="📄 Certificates">📄 الشهادات والرخص</div>
+    <div class="nav-title" id="nav-title" data-ar="الالتزامات الحكومية" data-en="Government Compliance">الالتزامات الحكومية</div>
+    <button onclick="toggleLang()" id="lang-btn" style="margin-right:8px;padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:var(--card);font-size:12px;font-weight:600;cursor:pointer;color:var(--blue-dk)">EN</button>
   </div>
 </nav>
 
@@ -125,57 +126,73 @@
   <div class="page" id="main-content" style="display:none">
     <div class="top-bar">
       <div>
-        <h1>لوحة متابعة الالتزامات الحكومية</h1>
-        <p>الشركة · جميع السجلات والتراخيص والإقامات في مكان واحد</p>
+        <h1 data-ar="لوحة متابعة الالتزامات الحكومية" data-en="Government Compliance Dashboard">لوحة متابعة الالتزامات الحكومية</h1>
+        <p data-ar="الشركة · جميع السجلات والتراخيص والإقامات في مكان واحد" data-en="Company · All registrations, licenses and residencies in one place">الشركة · جميع السجلات والتراخيص والإقامات في مكان واحد</p>
       </div>
-      <div class="update-tag"><span class="dot-live"></span><span id="last-update">جاري التحميل…</span></div>
+      <div class="update-tag"><span class="dot-live"></span><span id="last-update" data-ar="جاري التحميل…" data-en="Loading…">جاري التحميل…</span></div>
     </div>
     <div class="kpis">
-      <div class="kpi kpi-all"><div class="kpi-num" id="cnt-all">0</div><div class="kpi-lbl">إجمالي البنود</div><div class="kpi-sub" id="sub-all"></div></div>
-      <div class="kpi kpi-red"><div class="kpi-num" id="cnt-red">0</div><div class="kpi-lbl">حرج</div><div class="kpi-sub">≤ ٣٠ يوم · متابعة فورية</div></div>
-      <div class="kpi kpi-amber"><div class="kpi-num" id="cnt-amber">0</div><div class="kpi-lbl">قريب</div><div class="kpi-sub">٣١ – ٦٠ يوم</div></div>
-      <div class="kpi kpi-green"><div class="kpi-num" id="cnt-green">0</div><div class="kpi-lbl">ساري</div><div class="kpi-sub">أكثر من ٦٠ يوم</div></div>
-      <div class="kpi kpi-gray"><div class="kpi-num" id="cnt-gray">0</div><div class="kpi-lbl">بدون تاريخ</div><div class="kpi-sub">يحتاج مراجعة</div></div>
+      <div class="kpi kpi-all"><div class="kpi-num" id="cnt-all">0</div><div class="kpi-lbl" data-ar="إجمالي البنود" data-en="Total Items">إجمالي البنود</div><div class="kpi-sub" id="sub-all"></div></div>
+      <div class="kpi kpi-red"><div class="kpi-num" id="cnt-red">0</div><div class="kpi-lbl" data-ar="حرج" data-en="Critical">حرج</div><div class="kpi-sub" data-ar="≤ ٣٠ يوم · متابعة فورية" data-en="≤ 30 days · Immediate action">≤ ٣٠ يوم · متابعة فورية</div></div>
+      <div class="kpi kpi-amber"><div class="kpi-num" id="cnt-amber">0</div><div class="kpi-lbl" data-ar="قريب" data-en="Due Soon">قريب</div><div class="kpi-sub" data-ar="٣١ – ٦٠ يوم" data-en="31 – 60 days">٣١ – ٦٠ يوم</div></div>
+      <div class="kpi kpi-green"><div class="kpi-num" id="cnt-green">0</div><div class="kpi-lbl" data-ar="ساري" data-en="Active">ساري</div><div class="kpi-sub" data-ar="أكثر من ٦٠ يوم" data-en="More than 60 days">أكثر من ٦٠ يوم</div></div>
+      <div class="kpi kpi-gray"><div class="kpi-num" id="cnt-gray">0</div><div class="kpi-lbl" data-ar="بدون تاريخ" data-en="No Date">بدون تاريخ</div><div class="kpi-sub" data-ar="يحتاج مراجعة" data-en="Needs review">يحتاج مراجعة</div></div>
     </div>
     <div class="mid-row">
       <div class="card">
-        <div class="card-hdr">توزيع الحالات</div>
+        <div class="card-hdr" data-ar="توزيع الحالات" data-en="Status Distribution">توزيع الحالات</div>
         <div style="position:relative;width:150px;height:150px;margin:0 auto"><canvas id="donut"></canvas></div>
         <div class="legend">
-          <div class="legend-row"><div class="legend-sq" style="background:var(--red)"></div><span style="flex:1">حرج</span><strong id="leg-red">0</strong></div>
-          <div class="legend-row"><div class="legend-sq" style="background:var(--amber)"></div><span style="flex:1">قريب</span><strong id="leg-amber">0</strong></div>
-          <div class="legend-row"><div class="legend-sq" style="background:var(--green)"></div><span style="flex:1">ساري</span><strong id="leg-green">0</strong></div>
-          <div class="legend-row"><div class="legend-sq" style="background:var(--gray)"></div><span style="flex:1">بدون تاريخ</span><strong id="leg-gray">0</strong></div>
+          <div class="legend-row"><div class="legend-sq" style="background:var(--red)"></div><span style="flex:1" data-ar="حرج" data-en="Critical">حرج</span><strong id="leg-red">0</strong></div>
+          <div class="legend-row"><div class="legend-sq" style="background:var(--amber)"></div><span style="flex:1" data-ar="قريب" data-en="Due Soon">قريب</span><strong id="leg-amber">0</strong></div>
+          <div class="legend-row"><div class="legend-sq" style="background:var(--green)"></div><span style="flex:1" data-ar="ساري" data-en="Active">ساري</span><strong id="leg-green">0</strong></div>
+          <div class="legend-row"><div class="legend-sq" style="background:var(--gray)"></div><span style="flex:1" data-ar="بدون تاريخ" data-en="No Date">بدون تاريخ</span><strong id="leg-gray">0</strong></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-hdr">البنود حسب النوع والجهة</div>
+        <div class="card-hdr" data-ar="البنود حسب النوع والجهة" data-en="Items by Type & Entity">البنود حسب النوع والجهة</div>
         <div class="bar-chart-area" id="bar-area"></div>
       </div>
     </div>
     <div class="card">
-      <div class="card-hdr">تفاصيل البنود</div>
+      <div class="card-hdr" data-ar="تفاصيل البنود" data-en="Item Details">تفاصيل البنود</div>
       <div class="filters">
-        <label>الحالة:</label>
-        <select id="f-status" onchange="render()"><option value="">الكل</option><option value="حرج">حرج</option><option value="قريب">قريب</option><option value="ساري">ساري</option><option value="بدون تاريخ">بدون تاريخ</option></select>
-        <label>المصدر:</label>
-        <select id="f-src" onchange="render()"><option value="">الكل</option><option value="جهة حكومية">جهات حكومية</option><option value="مقيم">مقيم</option></select>
-        <label>الأولوية:</label>
-        <select id="f-pri" onchange="render()"><option value="">الكل</option><option value="عالية">عالية</option><option value="متوسطة">متوسطة</option><option value="منخفضة">منخفضة</option><option value="مراجعة مطلوبة">مراجعة مطلوبة</option></select>
+        <label data-ar="الحالة:" data-en="Status:">الحالة:</label>
+        <select id="f-status" onchange="render()"><option value="">الكل</option><option value="حرج" data-ar="حرج" data-en="Critical">حرج</option><option value="قريب" data-ar="قريب" data-en="Due Soon">قريب</option><option value="ساري" data-ar="ساري" data-en="Active">ساري</option><option value="بدون تاريخ" data-ar="بدون تاريخ" data-en="No Date">بدون تاريخ</option></select>
+        <label data-ar="المصدر:" data-en="Source:">المصدر:</label>
+        <select id="f-src" onchange="render()">
+  <option value="">الكل</option>
+  <option value="جهة حكومية">جهات حكومية</option>
+  <option value="مقيم">مقيم</option>
+</select>
+        <label data-ar="الأولوية:" data-en="Priority:">الأولوية:</label>
+        <select id="f-pri" onchange="render()">
+  <option value="">الكل</option>
+  <option value="عالية">عالية</option>
+  <option value="متوسطة">متوسطة</option>
+  <option value="منخفضة">منخفضة</option>
+  <option value="مراجعة مطلوبة">مراجعة مطلوبة</option>
+</select>
         <span id="count-tag" style="margin-right:auto;font-size:11px;color:var(--text-2)"></span>
       </div>
       <div class="tbl-wrap" style="max-height:460px;overflow-y:auto">
         <table>
           <thead><tr>
-            <th onclick="sortBy('src')">المصدر</th><th onclick="sortBy('entity')">الجهة</th><th onclick="sortBy('type')">النوع</th>
-            <th onclick="sortBy('item')">البند</th><th onclick="sortBy('date')">تاريخ الانتهاء</th><th onclick="sortBy('days')">أيام متبقية</th>
-            <th onclick="sortBy('status')">الحالة</th><th onclick="sortBy('priority')">الأولوية</th><th>ملاحظات</th>
+            <th onclick="sortBy('src')" data-ar="المصدر" data-en="Source">المصدر</th>
+            <th onclick="sortBy('entity')" data-ar="الجهة" data-en="Entity">الجهة</th>
+            <th onclick="sortBy('type')" data-ar="النوع" data-en="Type">النوع</th>
+            <th onclick="sortBy('item')" data-ar="البند" data-en="Item">البند</th>
+            <th onclick="sortBy('date')" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</th>
+            <th onclick="sortBy('days')" data-ar="أيام متبقية" data-en="Days Left">أيام متبقية</th>
+            <th onclick="sortBy('status')" data-ar="الحالة" data-en="Status">الحالة</th>
+            <th onclick="sortBy('priority')" data-ar="الأولوية" data-en="Priority">الأولوية</th>
+            <th data-ar="ملاحظات" data-en="Notes">ملاحظات</th>
           </tr></thead>
           <tbody id="tbl-body"></tbody>
         </table>
       </div>
     </div>
-    <div class="footer">يتم تحميل البيانات مباشرة من <strong>Tracker_PowerBI_xlsx.xlsx</strong> على GitHub &nbsp;·&nbsp; آخر تحديث: <span id="file-date">—</span></div>
+    <div class="footer" data-ar="يتم تحميل البيانات مباشرة من Tracker_PowerBI_xlsx.xlsx على GitHub · آخر تحديث:" data-en="Data loaded directly from Tracker_PowerBI_xlsx.xlsx on GitHub · Last updated:">يتم تحميل البيانات مباشرة من <strong>Tracker_PowerBI_xlsx.xlsx</strong> على GitHub &nbsp;·&nbsp; آخر تحديث: <span id="file-date">—</span></div>
   </div>
 </div>
 
@@ -184,12 +201,12 @@
   <div class="page">
     <div class="top-bar">
       <div>
-        <h1>روابط الجهات الحكومية</h1>
-        <p>ادخل مباشرة لكل جهة بضغطة زر واحدة</p>
+        <h1 data-ar="روابط الجهات الحكومية" data-en="Government Entity Links">روابط الجهات الحكومية</h1>
+        <p data-ar="ادخل مباشرة لكل جهة بضغطة زر واحدة" data-en="Access each entity directly with one click">ادخل مباشرة لكل جهة بضغطة زر واحدة</p>
       </div>
     </div>
 
-    <div class="section-title">🏛️ الجهات الحكومية</div>
+    <div class="section-title" data-ar="🏛️ الجهات الحكومية" data-en="🏛️ Government Entities">🏛️ الجهات الحكومية</div>
     <div class="links-grid">
 
       <div class="link-card">
@@ -197,8 +214,8 @@
           <div class="link-icon" style="background:#E8F4FD">🏢</div>
           <div><div class="link-name">وزارة التجارة</div><div class="link-type">السجل التجاري – CR</div></div>
         </div>
-        <div class="link-desc">تجديد السجل التجاري CR32 و CR42، الاستعلام عن التراخيص</div>
-        <a class="link-btn" href="https://mc.gov.sa" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="تجديد السجل التجاري CR32 و CR42، الاستعلام عن التراخيص" data-en="Renew CR32 & CR42 commercial registrations, license inquiries">تجديد السجل التجاري CR32 و CR42، الاستعلام عن التراخيص</div>
+        <a class="link-btn" href="https://mc.gov.sa" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -206,8 +223,8 @@
           <div class="link-icon" style="background:#FFF3E0">💼</div>
           <div><div class="link-name">قوى – Qiwa</div><div class="link-type">شهادة السعودة</div></div>
         </div>
-        <div class="link-desc">شهادة السعودة (Nationalization)، نطاقات، خدمات الموارد البشرية</div>
-        <a class="link-btn" href="https://www.qiwa.sa" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="شهادة السعودة (Nationalization)، نطاقات، خدمات الموارد البشرية" data-en="Nationalization certificate, Nitaqat, HR services">شهادة السعودة (Nationalization)، نطاقات، خدمات الموارد البشرية</div>
+        <a class="link-btn" href="https://www.qiwa.sa" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -215,8 +232,8 @@
           <div class="link-icon" style="background:#E8F5E9">💰</div>
           <div><div class="link-name">هيئة الزكاة – ZATCA</div><div class="link-type">شهادة ZATCA · VAT</div></div>
         </div>
-        <div class="link-desc">شهادة ZATCA، ضريبة القيمة المضافة VAT، الفواتير الإلكترونية</div>
-        <a class="link-btn" href="https://www.zatca.gov.sa" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="شهادة ZATCA، ضريبة القيمة المضافة VAT، الفواتير الإلكترونية" data-en="ZATCA certificate, VAT, e-invoicing">شهادة ZATCA، ضريبة القيمة المضافة VAT، الفواتير الإلكترونية</div>
+        <a class="link-btn" href="https://www.zatca.gov.sa" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -224,8 +241,8 @@
           <div class="link-icon" style="background:#F3E5F5">🛡️</div>
           <div><div class="link-name">التأمينات – GOSI</div><div class="link-type">شهادة GOSI</div></div>
         </div>
-        <div class="link-desc">شهادة التأمينات الاجتماعية، اشتراكات الموظفين، الخدمات الإلكترونية</div>
-        <a class="link-btn" href="https://www.gosi.gov.sa" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="شهادة التأمينات الاجتماعية، اشتراكات الموظفين، الخدمات الإلكترونية" data-en="Social insurance certificate, employee contributions, e-services">شهادة التأمينات الاجتماعية، اشتراكات الموظفين، الخدمات الإلكترونية</div>
+        <a class="link-btn" href="https://www.gosi.gov.sa" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -233,8 +250,8 @@
           <div class="link-icon" style="background:#E3F2FD">🎓</div>
           <div><div class="link-name">التدريب التقني – TVTC</div><div class="link-type">ترخيص TVTC</div></div>
         </div>
-        <div class="link-desc">ترخيص مؤسسات التدريب، الاعتماد، تجديد الترخيص</div>
-        <a class="link-btn" href="https://pt-web.tvtc.gov.sa/services-list" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="ترخيص مؤسسات التدريب، الاعتماد، تجديد الترخيص" data-en="Training institution license, accreditation, renewal">ترخيص مؤسسات التدريب، الاعتماد، تجديد الترخيص</div>
+        <a class="link-btn" href="https://pt-web.tvtc.gov.sa/services-list" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -242,8 +259,8 @@
           <div class="link-icon" style="background:#FFF8E1">🏆</div>
           <div><div class="link-name">منشآت – Monshaat</div><div class="link-type">شهادة SME</div></div>
         </div>
-        <div class="link-desc">شهادة المنشآت الصغيرة والمتوسطة SME، برامج الدعم</div>
-        <a class="link-btn" href="https://www.monshaat.gov.sa" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="شهادة المنشآت الصغيرة والمتوسطة SME، برامج الدعم" data-en="SME certificate, support programs">شهادة المنشآت الصغيرة والمتوسطة SME، برامج الدعم</div>
+        <a class="link-btn" href="https://www.monshaat.gov.sa" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -251,8 +268,8 @@
           <div class="link-icon" style="background:#E8EAF6">🌐</div>
           <div><div class="link-name">وزارة الاستثمار – MISA</div><div class="link-type">ترخيص الاستثمار</div></div>
         </div>
-        <div class="link-desc">ترخيص الاستثمار الأجنبي، تجديد التراخيص، خدمات المستثمرين</div>
-        <a class="link-btn" href="https://misa.gov.sa" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="ترخيص الاستثمار الأجنبي، تجديد التراخيص، خدمات المستثمرين" data-en="Foreign investment license, renewal, investor services">ترخيص الاستثمار الأجنبي، تجديد التراخيص، خدمات المستثمرين</div>
+        <a class="link-btn" href="https://misa.gov.sa" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -260,8 +277,8 @@
           <div class="link-icon" style="background:#FCE4EC">🏛️</div>
           <div><div class="link-name">غرفة الرياض</div><div class="link-type">شهادة العضوية – COC</div></div>
         </div>
-        <div class="link-desc">تجديد عضوية غرفة الرياض COC، شهادة العضوية للـ CR32 و CR42</div>
-        <a class="link-btn" href="https://www.chamber.sa/Pages/default.aspx" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="تجديد عضوية غرفة الرياض COC، شهادة العضوية للـ CR32 و CR42" data-en="Renew Riyadh Chamber membership COC for CR32 & CR42">تجديد عضوية غرفة الرياض COC، شهادة العضوية للـ CR32 و CR42</div>
+        <a class="link-btn" href="https://www.chamber.sa/Pages/default.aspx" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -269,8 +286,8 @@
           <div class="link-icon" style="background:#E0F7FA">📮</div>
           <div><div class="link-name">البريد السعودي – SPL</div><div class="link-type">العنوان الوطني</div></div>
         </div>
-        <div class="link-desc">تسجيل العنوان الوطني للـ CR32 و CR42، تحديث وتجديد العنوان</div>
-        <a class="link-btn" href="https://www.splonline.com.sa" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="تسجيل العنوان الوطني للـ CR32 و CR42، تحديث وتجديد العنوان" data-en="Register national address for CR32 & CR42, update and renew">تسجيل العنوان الوطني للـ CR32 و CR42، تحديث وتجديد العنوان</div>
+        <a class="link-btn" href="https://www.splonline.com.sa" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
       <div class="link-card">
@@ -278,13 +295,13 @@
           <div class="link-icon" style="background:#F1F8E9">📋</div>
           <div><div class="link-name">وزارة الموارد البشرية</div><div class="link-type">شهادة MOSI</div></div>
         </div>
-        <div class="link-desc">خدمات العمل والموارد البشرية، تصاريح العمل، الخدمات الإلكترونية</div>
-        <a class="link-btn" href="https://es.hrsd.gov.sa/SecureSSL/Login.aspx" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="خدمات العمل والموارد البشرية، تصاريح العمل، الخدمات الإلكترونية" data-en="Labor and HR services, work permits, e-services">خدمات العمل والموارد البشرية، تصاريح العمل، الخدمات الإلكترونية</div>
+        <a class="link-btn" href="https://es.hrsd.gov.sa/SecureSSL/Login.aspx" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
     </div>
 
-    <div class="section-title">👤 الإقامة والتأشيرات</div>
+    <div class="section-title" data-ar="👤 الإقامة والتأشيرات" data-en="👤 Residency & Visas">👤 الإقامة والتأشيرات</div>
     <div class="links-grid">
 
       <div class="link-card">
@@ -292,8 +309,8 @@
           <div class="link-icon" style="background:#E8F4FD">🪪</div>
           <div><div class="link-name">مقيم – Muqeem</div><div class="link-type">الإقامة والتأشيرات</div></div>
         </div>
-        <div class="link-desc">تجديد الإقامة، الاستعلام عن التأشيرات، متابعة حالة المقيمين</div>
-        <a class="link-btn" href="https://muqeem.sa" target="_blank">🔗 فتح الموقع</a>
+        <div class="link-desc" data-ar="تجديد الإقامة، الاستعلام عن التأشيرات، متابعة حالة المقيمين" data-en="Renew residency, visa inquiries, resident status tracking">تجديد الإقامة، الاستعلام عن التأشيرات، متابعة حالة المقيمين</div>
+        <a class="link-btn" href="https://muqeem.sa" target="_blank" data-ar="🔗 فتح الموقع" data-en="🔗 Open Website">🔗 فتح الموقع</a>
       </div>
 
     </div>
@@ -307,200 +324,200 @@
   <div class="page">
     <div class="top-bar">
       <div>
-        <h1>الشهادات والرخص</h1>
-        <p>جميع الوثائق الرسمية للشركة في مكان واحد</p>
+        <h1 data-ar="الشهادات والرخص" data-en="Certificates & Licenses">الشهادات والرخص</h1>
+        <p data-ar="جميع الوثائق الرسمية للشركة في مكان واحد" data-en="All official company documents in one place">جميع الوثائق الرسمية للشركة في مكان واحد</p>
       </div>
     </div>
 
-    <div class="section-title">🏢 ميرك للاستشارات والتدريب – CR32 (7029908865)</div>
+    <div class="section-title" data-ar="🏢 ميرك للاستشارات والتدريب – CR32 (7029908865)" data-en="🏢 Meirc Consulting & Training – CR32 (7029908865)">🏢 ميرك للاستشارات والتدريب – CR32 (7029908865)</div>
     <div class="cert-grid">
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">شهادة الزكاة – ZATCA</div><div class="cert-entity">هيئة الزكاة والضريبة والجمارك</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="شهادة الزكاة – ZATCA" data-en="ZATCA Certificate">شهادة الزكاة – ZATCA</div><div class="cert-entity" data-ar="هيئة الزكاة والضريبة والجمارك" data-en="Zakat, Tax and Customs Authority">هيئة الزكاة والضريبة والجمارك</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
         <div class="cert-num">رقم الشهادة: 1027230956</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">05/11/1447هـ</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">30 أبريل 2027</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">05/11/1447هـ</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)" data-ar="30 أبريل 2027" data-en="30 Apr 2027">30 أبريل 2027</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">CR: 1010813032</span><span class="badge b-green">358 يوم</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Zakat-Cert-2027.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Zakat-Cert-2027.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-red">
         <div class="cert-top">
-          <div><div class="cert-name">شهادة الإقامة الضريبية</div><div class="cert-entity">هيئة الزكاة والضريبة والجمارك</div></div>
-          <span class="badge b-red">يحتاج مراجعة</span>
+          <div><div class="cert-name" data-ar="شهادة الإقامة الضريبية" data-en="Tax Residency Certificate">شهادة الإقامة الضريبية</div><div class="cert-entity" data-ar="هيئة الزكاة والضريبة والجمارك" data-en="Zakat, Tax and Customs Authority">هيئة الزكاة والضريبة والجمارك</div></div>
+          <span class="badge b-red" data-ar="يحتاج مراجعة" data-en="Needs review">يحتاج مراجعة</span>
         </div>
         <div class="cert-num">رقم الشهادة: 100261168150256</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">07/04/2026</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">صالحة لعام</div><div class="cert-date-val" style="color:var(--amber-dk)">2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">07/04/2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="صالحة لعام" data-en="Valid for year">صالحة لعام</div><div class="cert-date-val" style="color:var(--amber-dk)">2026</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">CR: 1010813032 · TIN: 3116554691</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Tax-Residency-ZATCA.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Tax-Residency-ZATCA.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">شهادة التوطين – Qiwa</div><div class="cert-entity">وزارة الموارد البشرية · قوى</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="شهادة التوطين – Qiwa" data-en="Nationalization Certificate – Qiwa">شهادة التوطين – Qiwa</div><div class="cert-entity" data-ar="وزارة الموارد البشرية · قوى" data-en="Ministry of HR & Social Dev. · Qiwa">وزارة الموارد البشرية · قوى</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
         <div class="cert-num">رقم الشهادة: 170949-65665987</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">07/05/2026</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">5 أغسطس 2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">07/05/2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)" data-ar="5 أغسطس 2026" data-en="5 Aug 2026">5 أغسطس 2026</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">الرقم الوطني: 7029908865 · توطين 55%</span><span class="badge b-green">90 يوم</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Nationalization-CR42-7033766317.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Nationalization-CR42-7033766317.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-red">
         <div class="cert-top">
-          <div><div class="cert-name">شهادة عضوية غرفة الرياض</div><div class="cert-entity">الغرفة التجارية الصناعية بالرياض</div></div>
-          <span class="badge b-red">حرج</span>
+          <div><div class="cert-name" data-ar="شهادة عضوية غرفة الرياض" data-en="Riyadh Chamber Membership">شهادة عضوية غرفة الرياض</div><div class="cert-entity" data-ar="الغرفة التجارية الصناعية بالرياض" data-en="Riyadh Chamber of Commerce">الغرفة التجارية الصناعية بالرياض</div></div>
+          <span class="badge b-red" data-ar="حرج" data-en="Critical">حرج</span>
         </div>
         <div class="cert-num">رقم العضوية: 742640</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">18/07/2022</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--red)">25 مايو 2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">18/07/2022</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--red)" data-ar="25 مايو 2026" data-en="25 May 2026">25 مايو 2026</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">CR: 1010813032 · درجة ثانية</span><span class="badge b-red">18 يوم</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px;background:var(--red)" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Meric -CoC Membership Certificate EXP May 25 2026.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px;background:var(--red)" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Meric -CoC Membership Certificate EXP May 25 2026.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">ترخيص الاستثمار – MISA</div><div class="cert-entity">وزارة الاستثمار</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="ترخيص الاستثمار – MISA" data-en="Investment License – MISA">ترخيص الاستثمار – MISA</div><div class="cert-entity" data-ar="وزارة الاستثمار" data-en="Ministry of Investment">وزارة الاستثمار</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
         <div class="cert-num">رقم الترخيص: 102164308134617</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">13/03/2022</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">11 يناير 2027</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">13/03/2022</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)" data-ar="11 يناير 2027" data-en="11 Jan 2027">11 يناير 2027</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">الرقم الوطني: 7029908865</span><span class="badge b-green">247 يوم</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/MISA (New) - 2027.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/MISA (New) - 2027.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">السجل التجاري – CR32</div><div class="cert-entity">وزارة التجارة</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="السجل التجاري – CR32" data-en="Commercial Registration – CR32">السجل التجاري – CR32</div><div class="cert-entity" data-ar="وزارة التجارة" data-en="Ministry of Commerce">وزارة التجارة</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
-        <div class="cert-num">الرقم الوطني: 7029908865</div>
+        <div class="cert-num">الرقم الوطني الموحد: 7029908865</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">07/07/2022</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">نوع المنشأة</div><div class="cert-date-val">فرع شركة أجنبية</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="رقم CR" data-en="CR No.">رقم CR</div><div class="cert-date-val" style="font-weight:700;color:var(--blue-dk)">1010813032</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">07/07/2022</div></div>
         </div>
-        <div class="cert-footer"><span class="cert-cr">CR: 1010813032 · الحالة: نشطة</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/CR32-Main-1010813032.pdf" target="_blank">📄 عرض الشهادة</a>
+        <div class="cert-footer"><span class="cert-cr" data-ar="نوع المنشأة: فرع شركة أجنبية · الحالة: نشطة" data-en="Entity Type: Foreign Branch · Status: Active">نوع المنشأة: فرع شركة أجنبية · الحالة: نشطة</span></div>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/CR32-Main-1010813032.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
     </div>
 
-    <div class="section-title" style="margin-top:32px">🎓 مركز ميرك للتدريب – CR42 (7033766317)</div>
+    <div class="section-title" style="margin-top:32px" data-ar="🎓 مركز ميرك للتدريب – CR42 (7033766317)" data-en="🎓 Meirc Training Center – CR42 (7033766317)">🎓 مركز ميرك للتدريب – CR42 (7033766317)</div>
     <div class="cert-grid">
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">ترخيص التدريب – TVTC</div><div class="cert-entity">المؤسسة العامة للتدريب التقني والمهني</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="ترخيص التدريب – TVTC" data-en="Training License – TVTC">ترخيص التدريب – TVTC</div><div class="cert-entity" data-ar="المؤسسة العامة للتدريب التقني والمهني" data-en="Technical & Vocational Training Corp.">المؤسسة العامة للتدريب التقني والمهني</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
         <div class="cert-num">رقم الإصدار: 1181861142</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">1181861142</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">17 يوليو 2028</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">1181861142</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)" data-ar="17 يوليو 2028" data-en="17 Jul 2028">17 يوليو 2028</div></div>
         </div>
-        <div class="cert-footer"><span class="cert-cr">مركز ميرك للتدريب – الرياض</span><span class="badge b-green">802 يوم</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/TVTC-License-2028.pdf" target="_blank">📄 عرض الشهادة</a>
+        <div class="cert-footer"><span class="cert-cr" data-ar="مركز ميرك للتدريب – الرياض" data-en="Meirc Training Center – Riyadh">مركز ميرك للتدريب – الرياض</span><span class="badge b-green">802 يوم</span></div>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/TVTC-License-2028.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">شهادة التوطين – Qiwa</div><div class="cert-entity">وزارة الموارد البشرية · قوى</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="شهادة التوطين – Qiwa" data-en="Nationalization Certificate – Qiwa">شهادة التوطين – Qiwa</div><div class="cert-entity" data-ar="وزارة الموارد البشرية · قوى" data-en="Ministry of HR & Social Dev. · Qiwa">وزارة الموارد البشرية · قوى</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
         <div class="cert-num">رقم الشهادة: 256343-19899920</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">18/12/2025</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">1 أغسطس 2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">18/12/2025</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)" data-ar="1 أغسطس 2026" data-en="1 Aug 2026">1 أغسطس 2026</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">الرقم الوطني: 7033766317 · توطين 55%</span><span class="badge b-green">86 يوم</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Nationalization-CR32-7029908865.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Nationalization-CR32-7029908865.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">شهادة GOSI – التأمينات</div><div class="cert-entity">المؤسسة العامة للتأمينات الاجتماعية</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="شهادة GOSI – التأمينات" data-en="GOSI – Social Insurance Certificate">شهادة GOSI – التأمينات</div><div class="cert-entity" data-ar="المؤسسة العامة للتأمينات الاجتماعية" data-en="General Organization for Social Insurance">المؤسسة العامة للتأمينات الاجتماعية</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
         <div class="cert-num">رمز الشهادة: 112057702</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">11/04/2026</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">25/01/1448هـ</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">11/04/2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">25/01/1448هـ</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">رقم الاشتراك: 638909642 · 10 مشتركين</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/GOSI.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/GOSI.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-red">
         <div class="cert-top">
-          <div><div class="cert-name">شهادة منشآت – SME</div><div class="cert-entity">الهيئة العامة للمنشآت الصغيرة والمتوسطة</div></div>
-          <span class="badge b-red">حرج</span>
+          <div><div class="cert-name" data-ar="شهادة منشآت – SME" data-en="Monshaat – SME Certificate">شهادة منشآت – SME</div><div class="cert-entity" data-ar="الهيئة العامة للمنشآت الصغيرة والمتوسطة" data-en="Small & Medium Enterprises Authority">الهيئة العامة للمنشآت الصغيرة والمتوسطة</div></div>
+          <span class="badge b-red" data-ar="حرج" data-en="Critical">حرج</span>
         </div>
         <div class="cert-num">رقم الشهادة: 25217203697</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">03/06/2025</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--red)">3 يونيو 2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">03/06/2025</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--red)" data-ar="3 يونيو 2026" data-en="3 Jun 2026">3 يونيو 2026</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">الرقم الوطني: 7033766317</span><span class="badge b-red">27 يوم</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px;background:var(--red)" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Meirc Monsha'at EXP JUNE 3 2026.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px;background:var(--red)" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Meirc Monsha'at EXP JUNE 3 2026.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">شهادة عضوية غرفة الرياض</div><div class="cert-entity">الغرفة التجارية الصناعية بالرياض</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="شهادة عضوية غرفة الرياض" data-en="Riyadh Chamber Membership">شهادة عضوية غرفة الرياض</div><div class="cert-entity" data-ar="الغرفة التجارية الصناعية بالرياض" data-en="Riyadh Chamber of Commerce">الغرفة التجارية الصناعية بالرياض</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
         <div class="cert-num">رقم العضوية: 836599</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">16/07/2023</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">6 يناير 2027</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">16/07/2023</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)" data-ar="6 يناير 2027" data-en="6 Jan 2027">6 يناير 2027</div></div>
         </div>
         <div class="cert-footer"><span class="cert-cr">CR: 1010860142 · درجة ثانية</span><span class="badge b-green">242 يوم</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/CoC 42 EXP Jan 6 2027.pdf" target="_blank">📄 عرض الشهادة</a>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/CoC 42 EXP Jan 6 2027.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">العنوان الوطني</div><div class="cert-entity">البريد السعودي SPL</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="العنوان الوطني" data-en="National Address">العنوان الوطني</div><div class="cert-entity" data-ar="البريد السعودي SPL" data-en="Saudi Post SPL">البريد السعودي SPL</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
         <div class="cert-num">رقم الإثبات: 1080130933</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الإصدار</div><div class="cert-date-val">3/2/2026</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)">2 أغسطس 2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">3/2/2026</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الانتهاء" data-en="Expiry Date">تاريخ الانتهاء</div><div class="cert-date-val" style="color:var(--green-dk)" data-ar="2 أغسطس 2026" data-en="2 Aug 2026">2 أغسطس 2026</div></div>
         </div>
-        <div class="cert-footer"><span class="cert-cr">RUQA7523 – سعيد بن زيد، حي قرطبة، الرياض</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Meirc National Address updated Feb 2026.pdf" target="_blank">📄 عرض الشهادة</a>
+        <div class="cert-footer"><span class="cert-cr" data-ar="RUQA7523 – سعيد بن زيد، حي قرطبة، الرياض" data-en="RUQA7523 – Saeed Ibn Zaid St., Qurtubah, Riyadh">RUQA7523 – سعيد بن زيد، حي قرطبة، الرياض</span></div>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/Meirc National Address updated Feb 2026.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
 
       <div class="cert-card status-green">
         <div class="cert-top">
-          <div><div class="cert-name">السجل التجاري – CR42</div><div class="cert-entity">وزارة التجارة</div></div>
-          <span class="badge b-green">ساري</span>
+          <div><div class="cert-name" data-ar="السجل التجاري – CR42" data-en="Commercial Registration – CR42">السجل التجاري – CR42</div><div class="cert-entity" data-ar="وزارة التجارة" data-en="Ministry of Commerce">وزارة التجارة</div></div>
+          <span class="badge b-green" data-ar="ساري" data-en="Active">ساري</span>
         </div>
-        <div class="cert-num">الرقم الوطني: 7033766317</div>
+        <div class="cert-num">الرقم الوطني الموحد: 7033766317</div>
         <div class="cert-dates">
-          <div class="cert-date-box"><div class="cert-date-lbl">رقم السجل</div><div class="cert-date-val">1010860142</div></div>
-          <div class="cert-date-box"><div class="cert-date-lbl">الحالة</div><div class="cert-date-val">نشطة</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="رقم CR" data-en="CR No.">رقم CR</div><div class="cert-date-val" style="font-weight:700;color:var(--blue-dk)">1010860142</div></div>
+          <div class="cert-date-box"><div class="cert-date-lbl" data-ar="تاريخ الإصدار" data-en="Issue Date">تاريخ الإصدار</div><div class="cert-date-val">08/02/2023</div></div>
         </div>
-        <div class="cert-footer"><span class="cert-cr">مركز ميرك للتدريب – فرع</span></div>
-        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/CR42-Center-1010860142.pdf" target="_blank">📄 عرض الشهادة</a>
+        <div class="cert-footer"><span class="cert-cr" data-ar="نوع المنشأة: فرع شركة أجنبية · الحالة: نشطة" data-en="Entity Type: Foreign Branch · Status: Active">نوع المنشأة: فرع شركة أجنبية · الحالة: نشطة</span></div>
+        <a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/CR42-Center-1010860142.pdf" target="_blank" data-ar="📄 عرض الشهادة" data-en="📄 View Certificate">📄 عرض الشهادة</a>
       </div>
 
     </div>
@@ -561,33 +578,184 @@ function buildDashboard(){
   const cntGreen=DATA.filter(d=>d.status==='ساري').length,cntGray=DATA.filter(d=>d.status==='بدون تاريخ').length;
   const cntGov=DATA.filter(d=>d.src==='جهة حكومية').length,cntRes=DATA.filter(d=>d.src==='مقيم').length;
   document.getElementById('cnt-all').textContent=DATA.length;
-  document.getElementById('sub-all').textContent=`${cntGov} حكومي · ${cntRes} مقيم`;
+  document.getElementById('sub-all').textContent=currentLang==='ar'?`${cntGov} حكومي · ${cntRes} مقيم`:`${cntGov} Government · ${cntRes} Resident`;
   ['red','amber','green','gray'].forEach(c=>{document.getElementById('cnt-'+c).textContent=eval('cnt'+c.charAt(0).toUpperCase()+c.slice(1));document.getElementById('leg-'+c).textContent=eval('cnt'+c.charAt(0).toUpperCase()+c.slice(1));});
   if(donutChart)donutChart.destroy();
   donutChart=new Chart(document.getElementById('donut'),{type:'doughnut',data:{labels:['حرج','قريب','ساري','بدون تاريخ'],datasets:[{data:[cntRed,cntAmber,cntGreen,cntGray],backgroundColor:['#E24B4A','#EF9F27','#639922','#888780'],borderWidth:3,borderColor:'#FFFFFF',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{rtl:true,callbacks:{label:ctx=>`  ${ctx.label}: ${ctx.parsed}`}}}}});
   const typeColors={'Nationalization Certificate':'#E24B4A','Commercial Registration Certificate':'#378ADD','Chamber Membership Certificate':'#1D9E75','تأشيرة':'#EF9F27','إقامة':'#BA7517','GOSI Certificate':'#888780','ZATCA Certificate':'#888780','VAT Certificate':'#888780','SME Certificate':'#639922','TVTC License':'#378ADD','National Address Record':'#B4B2A9','Investment License':'#185FA5','MOSI Certificate':'#5C4DB1'};
   const typeCounts={};DATA.forEach(d=>{typeCounts[d.type]=(typeCounts[d.type]||0)+1;});
+  const TYPE_LABELS_EN={'تأشيرة':'Visa','إقامة':'Residency','Nationalization Certificate':'Nationalization Certificate','Chamber Membership Certificate':'Chamber Membership Certificate','Commercial Registration Certificate':'Commercial Registration Certificate','National Address Record':'National Address Record','VAT Certificate':'VAT Certificate','ZATCA Certificate':'ZATCA Certificate','TVTC License':'TVTC License','SME Certificate':'SME Certificate','GOSI Certificate':'GOSI Certificate','Investment License':'Investment License','MOSI Certificate':'MOSI Certificate'};
   const types=Object.entries(typeCounts).map(([lbl,cnt])=>({lbl,cnt,color:typeColors[lbl]||'#888780'})).sort((a,b)=>b.cnt-a.cnt);
   const maxCnt=Math.max(...types.map(t=>t.cnt));
-  document.getElementById('bar-area').innerHTML=types.map(t=>`<div class="bar-row"><span class="bar-lbl">${t.lbl}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(t.cnt/maxCnt*100)}%;background:${t.color}"></div></div><span class="bar-cnt">${t.cnt}</span></div>`).join('');
+  document.getElementById('bar-area').innerHTML=types.map(t=>`<div class="bar-row"><span class="bar-lbl">${currentLang==='en'?(TYPE_LABELS_EN[t.lbl]||t.lbl):t.lbl}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(t.cnt/maxCnt*100)}%;background:${t.color}"></div></div><span class="bar-cnt">${t.cnt}</span></div>`).join('');
   render();
 }
 
-function badgeCls(s){return s==='حرج'?'b-red':s==='قريب'?'b-amber':s==='ساري'?'b-green':'b-gray';}
+
+const TYPE_MAP = {
+  'تأشيرة':'Visa', 'إقامة':'Residency'
+};
+// Item prefixes to translate
+function translateType(t){
+  if(currentLang==='ar') return t;
+  const m={'تأشيرة':'Visa','إقامة':'Residency','شهادة توطين':'Nationalization Cert'};
+  return m[t]||t;
+}
+function translateItem(item){
+  if(currentLang==='ar') return item;
+  return item
+    .replace('تأشيرة ','Visa – ')
+    .replace('إقامة ','Residency – ')
+    .replace('شهادة التوطين – ','Nationalization Cert – ');
+}
+function translateNotes(notes){
+  if(currentLang==='ar' || !notes) return notes||'—';
+  return notes
+    .replace('حالة التأشيرة: مستعمل','Visa Status: Used')
+    .replace('حالة التأشيرة: غير مستعملة','Visa Status: Unused')
+    .replace('حالة التأشيرة: غير متوفر','Visa Status: N/A')
+    .replace('رقم الإقامة:','Residency No:')
+    .replace('Supporting certificate added.','Supporting certificate added.')
+    .replace('No expiry visible on face.','No expiry visible on face.')
+    .replace('Uploaded doc is Tax Residency Cert.','Uploaded doc is Tax Residency Cert.');
+}
+function badgeCls(s){return s==='حرج'||s==='Critical'?'b-red':s==='قريب'||s==='Due Soon'?'b-amber':s==='ساري'||s==='Active'?'b-green':'b-gray';}
+
+const TRANS = {
+  ar: {
+    src_gov:'جهة حكومية', src_res:'مقيم',
+    critical:'حرج', soon:'قريب', active:'ساري', nodate:'بدون تاريخ',
+    high:'عالية', medium:'متوسطة', low:'منخفضة', review:'مراجعة مطلوبة',
+    nodata:'—', viewCert:'📄 عرض الشهادة',
+    filterAll:'الكل', filterGov:'جهات حكومية', filterRes:'مقيم',
+    fHigh:'عالية', fMed:'متوسطة', fLow:'منخفضة', fReview:'مراجعة مطلوبة',
+    showing:'عرض', of:'من', items:'بند',
+    lastLoad:'آخر تحميل:',
+  },
+  en: {
+    src_gov:'Government', src_res:'Resident',
+    critical:'Critical', soon:'Due Soon', active:'Active', nodate:'No Date',
+    high:'High', medium:'Medium', low:'Low', review:'Review Required',
+    nodata:'—', viewCert:'📄 View Certificate',
+    filterAll:'All', filterGov:'Government', filterRes:'Resident',
+    fHigh:'High', fMed:'Medium', fLow:'Low', fReview:'Review Required',
+    showing:'Showing', of:'of', items:'items',
+    lastLoad:'Last loaded:',
+  }
+};
+function t(key){ return TRANS[currentLang][key]; }
+function translateStatus(s){
+  if(s==='حرج'||s==='Critical') return currentLang==='ar'?'حرج':'Critical';
+  if(s==='قريب'||s==='Due Soon') return currentLang==='ar'?'قريب':'Due Soon';
+  if(s==='ساري'||s==='Active') return currentLang==='ar'?'ساري':'Active';
+  return currentLang==='ar'?'بدون تاريخ':'No Date';
+}
+function translateSrc(s){
+  if(s==='جهة حكومية'||s==='Government') return currentLang==='ar'?'جهة حكومية':'Government';
+  return currentLang==='ar'?'مقيم':'Resident';
+}
+function translatePriority(p){
+  if(p==='عالية'||p==='High') return currentLang==='ar'?'عالية':'High';
+  if(p==='متوسطة'||p==='Medium') return currentLang==='ar'?'متوسطة':'Medium';
+  if(p==='منخفضة'||p==='Low') return currentLang==='ar'?'منخفضة':'Low';
+  return currentLang==='ar'?'مراجعة مطلوبة':'Review Required';
+}
+const AR_MONTHS_EN={'يناير':'Jan','فبراير':'Feb','مارس':'Mar','أبريل':'Apr','مايو':'May','يونيو':'Jun','يوليو':'Jul','أغسطس':'Aug','سبتمبر':'Sep','أكتوبر':'Oct','نوفمبر':'Nov','ديسمبر':'Dec'};
+function translateDate(date){
+  if(currentLang==='ar'||date==='—') return date;
+  let d=date;
+  for(const [ar,en] of Object.entries(AR_MONTHS_EN)){d=d.replace(ar,en);}
+  return d;
+}
 function dayColor(d){return d===null?'var(--gray)':d<=30?'var(--red)':d<=60?'var(--amber)':'var(--green)';}
 function dayBg(d){return d===null?'var(--gray-lt)':d<=30?'var(--red-lt)':d<=60?'var(--amber-lt)':'var(--green-lt)';}
 
 function render(){
   const fs=document.getElementById('f-status').value,fr=document.getElementById('f-src').value,fp=document.getElementById('f-pri').value;
-  let rows=DATA.filter(d=>(!fs||d.status===fs)&&(!fr||d.src===fr)&&(!fp||d.priority===fp));
+  // Normalize filter values to Arabic for comparison
+  const statusMap={'Critical':'حرج','Due Soon':'قريب','Active':'ساري','No Date':'بدون تاريخ'};
+  const srcMap={'Government':'جهة حكومية','Resident':'مقيم'};
+  const priMap={'High':'عالية','Medium':'متوسطة','Low':'منخفضة','Review Required':'مراجعة مطلوبة'};
+  const fsAr = statusMap[fs]||fs;
+  const frAr = srcMap[fr]||fr;
+  const fpAr = priMap[fp]||fp;
+  let rows=DATA.filter(d=>(!fsAr||d.status===fsAr)&&(!frAr||d.src===frAr)&&(!fpAr||d.priority===fpAr));
   rows.sort((a,b)=>{const va=a[sortKey],vb=b[sortKey];if(va===null&&vb===null)return 0;if(va===null)return 1;if(vb===null)return -1;return va<vb?-sortDir:va>vb?sortDir:0;});
-  document.getElementById('count-tag').textContent=`عرض ${rows.length} من ${DATA.length} بند`;
-  document.getElementById('tbl-body').innerHTML=rows.map(d=>`<tr><td><span class="badge ${d.src==='مقيم'?'b-blue':'b-gray'}">${d.src}</span></td><td title="${d.entity}">${d.entity}</td><td title="${d.type}" style="color:var(--text-2)">${d.type}</td><td title="${d.item}">${d.item}</td><td style="white-space:nowrap;color:var(--text-2)">${d.date}</td><td style="text-align:center"><span class="days-pill" style="color:${dayColor(d.days)};background:${dayBg(d.days)}">${d.days===null?'—':d.days}</span></td><td><span class="badge ${badgeCls(d.status)}">${d.status}</span></td><td style="font-size:11px;color:var(--text-2)">${d.priority}</td><td style="font-size:11px;color:var(--text-2);max-width:160px" title="${d.notes}">${d.notes||'—'}</td></tr>`).join('');
+  document.getElementById('count-tag').textContent=currentLang==='ar'?`عرض ${rows.length} من ${DATA.length} بند`:`Showing ${rows.length} of ${DATA.length} items`;
+  document.getElementById('tbl-body').innerHTML=rows.map(d=>`<tr>
+    <td><span class="badge ${d.src==='مقيم'?'b-blue':'b-gray'}">${translateSrc(d.src)}</span></td>
+    <td title="${d.entity}">${d.entity}</td>
+    <td style="color:var(--text-2)">${translateType(d.type)}</td>
+    <td title="${d.item}">${translateItem(d.item)}</td>
+    <td style="white-space:nowrap;color:var(--text-2)">${translateDate(d.date)}</td>
+    <td style="text-align:center"><span class="days-pill" style="color:${dayColor(d.days)};background:${dayBg(d.days)}">${d.days===null?'—':d.days}</span></td>
+    <td><span class="badge ${badgeCls(d.status)}">${translateStatus(d.status)}</span></td>
+    <td style="font-size:11px;color:var(--text-2)">${translatePriority(d.priority)}</td>
+    <td style="font-size:11px;color:var(--text-2);max-width:160px" title="${d.notes}">${translateNotes(d.notes)}</td>
+  </tr>`).join('');
 }
 
 function sortBy(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=1;}render();}
 loadExcel();
 setInterval(loadExcel,5*60*1000);
+
+// ========== LANGUAGE TOGGLE ==========
+let currentLang = 'ar';
+function toggleLang() {
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
+  const isEn = currentLang === 'en';
+  
+  // Update html direction and lang
+  document.documentElement.lang = isEn ? 'en' : 'ar';
+  document.documentElement.dir = isEn ? 'ltr' : 'rtl';
+  
+  // Update button
+  document.getElementById('lang-btn').textContent = isEn ? 'عربي' : 'EN';
+  
+  // Update all elements with data-ar/data-en
+  document.querySelectorAll('[data-ar]').forEach(el => {
+    el.textContent = isEn ? el.dataset.en : el.dataset.ar;
+  });
+  
+  // Update table alignment
+  document.querySelectorAll('thead th').forEach(th => {
+    th.style.textAlign = isEn ? 'left' : 'right';
+  });
+  document.querySelectorAll('tbody td').forEach(td => {
+    td.style.textAlign = '';
+  });
+  
+  // Update bar labels alignment
+  document.querySelectorAll('.bar-lbl').forEach(el => {
+    el.style.textAlign = isEn ? 'left' : 'right';
+  });
+  
+  // Update filter options
+  const fStatus = document.getElementById('f-status');
+  const fSrc = document.getElementById('f-src');
+  const fPri = document.getElementById('f-pri');
+  if(isEn){
+    fStatus.options[0].text='All'; fStatus.options[1].text='Critical'; fStatus.options[2].text='Due Soon'; fStatus.options[3].text='Active'; fStatus.options[4].text='No Date';
+    fSrc.options[0].text='All'; fSrc.options[1].text='Government'; fSrc.options[2].text='Resident';
+    fPri.options[0].text='All'; fPri.options[1].text='High'; fPri.options[2].text='Medium'; fPri.options[3].text='Low'; fPri.options[4].text='Review Required';
+  } else {
+    fStatus.options[0].text='الكل'; fStatus.options[1].text='حرج'; fStatus.options[2].text='قريب'; fStatus.options[3].text='ساري'; fStatus.options[4].text='بدون تاريخ';
+    fSrc.options[0].text='الكل'; fSrc.options[1].text='جهات حكومية'; fSrc.options[2].text='مقيم';
+    fPri.options[0].text='الكل'; fPri.options[1].text='عالية'; fPri.options[2].text='متوسطة'; fPri.options[3].text='منخفضة'; fPri.options[4].text='مراجعة مطلوبة';
+  }
+  
+  // Update donut chart labels
+  if(donutChart){
+    donutChart.data.labels = isEn ? ['Critical','Due Soon','Active','No Date'] : ['حرج','قريب','ساري','بدون تاريخ'];
+    donutChart.update();
+  }
+  // Rebuild bar chart with translated labels
+  buildDashboard();
+  
+  // Re-render table with translated badges
+  render();
+}
+
 </script>
 </body>
 </html>
