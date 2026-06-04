@@ -347,7 +347,8 @@ const MONTHS_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','No
 const CERT_I18N={"شهادة الزكاة – ZATCA": {"te": "ZATCA Certificate", "ee": "Zakat, Tax and Customs Authority"}, "شهادة الإقامة الضريبية": {"te": "Tax Residency Certificate", "ee": "Zakat, Tax and Customs Authority"}, "شهادة التوطين – Qiwa": {"te": "Nationalization Certificate – Qiwa", "ee": "Ministry of HR & Social Dev. · Qiwa"}, "شهادة عضوية غرفة الرياض": {"te": "Riyadh Chamber Membership", "ee": "Riyadh Chamber of Commerce"}, "ترخيص الاستثمار – MISA": {"te": "Investment License – MISA", "ee": "Ministry of Investment"}, "شهادة SME": {"te": "SME Certificate", "ee": "Small & Medium Enterprises Authority"}, "السجل التجاري – CR32": {"te": "Commercial Registration – CR32", "ee": "Ministry of Commerce"}, "ترخيص التدريب – TVTC": {"te": "Training License – TVTC", "ee": "Technical & Vocational Training Corp."}, "شهادة GOSI – التأمينات": {"te": "GOSI – Social Insurance Certificate", "ee": "General Organization for Social Insurance"}, "العنوان الوطني": {"te": "National Address", "ee": "Saudi Post SPL"}, "السجل التجاري – CR42": {"te": "Commercial Registration – CR42", "ee": "Ministry of Commerce"}};
 const CERT_ST2CLS={'حرج':'red','قريب':'amber','ساري':'green','بدون تاريخ':'gray'};
 const CERT_HEADERS={CR32:{ar:'🏢 ميرك للاستشارات والتدريب – CR32 (7029908865)',en:'🏢 Meirc Consulting & Training – CR32 (7029908865)'},CR42:{ar:'🎓 مركز ميرك للتدريب – CR42 (7033766317)',en:'🎓 Meirc Training Center – CR42 (7033766317)'}};
-function toEnglishDate(d){if(!d)return'—';try{const dt=new Date(d);if(isNaN(dt))return'—';return`${dt.getDate()} ${MONTHS_EN[dt.getMonth()]} ${dt.getFullYear()}`;}catch{return'—';}}
+function xlMidnight(v){if(v==null)return null;let ms;if(typeof v==='number'){if(v<=1000)return null;ms=Date.UTC(1899,11,30)+v*86400000;}else if(v instanceof Date){ms=v.getTime();}else if(typeof v==='string'&&v.trim()){const p=new Date(v);if(isNaN(p))return null;ms=p.getTime();}else return null;return new Date(Math.round(ms/86400000)*86400000);}
+function toEnglishDate(d){const x=xlMidnight(d);if(!x)return'—';return`${x.getUTCDate()} ${MONTHS_EN[x.getUTCMonth()]} ${x.getUTCFullYear()}`;}
 
 function switchTab(tab) {
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
@@ -356,9 +357,9 @@ function switchTab(tab) {
   document.getElementById('pg-'+tab).classList.add('active');
 }
 
-function toArabicDate(d){if(!d)return'—';try{const dt=new Date(d);if(isNaN(dt))return'—';return`${dt.getDate()} ${MONTHS[dt.getMonth()]} ${dt.getFullYear()}`;}catch{return'—';}}
+function toArabicDate(d){const x=xlMidnight(d);if(!x)return'—';return`${x.getUTCDate()} ${MONTHS[x.getUTCMonth()]} ${x.getUTCFullYear()}`;}
 function excelDateToJS(s){if(typeof s==='number'&&s>1000)return new Date(Date.UTC(1899,11,30)+s*86400000);return null;}
-function calcDaysLeft(v){let dt=null;if(typeof v==='number')dt=excelDateToJS(v);else if(v instanceof Date)dt=v;else if(typeof v==='string'&&v.trim())dt=new Date(v);if(!dt||isNaN(dt))return null;const t=new Date();t.setHours(0,0,0,0);dt.setHours(0,0,0,0);return Math.round((dt-t)/86400000);}
+function calcDaysLeft(v){const x=xlMidnight(v);if(!x)return null;const n=new Date();const t0=Date.UTC(n.getFullYear(),n.getMonth(),n.getDate());return Math.round((x.getTime()-t0)/86400000);}
 function calcStatus(d){if(d===null)return'بدون تاريخ';if(d<=30)return'حرج';if(d<=60)return'قريب';return'ساري';}
 function calcPriority(d){if(d===null)return'مراجعة مطلوبة';if(d<=30)return'عالية';if(d<=60)return'متوسطة';return'منخفضة';}
 
