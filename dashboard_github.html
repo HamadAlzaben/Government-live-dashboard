@@ -63,7 +63,7 @@
   .filters select{font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);color:var(--text);cursor:pointer;outline:none}
   .tbl-wrap{overflow-x:auto}
   table{width:100%;border-collapse:collapse;font-size:12px}
-  thead th{text-align:right;padding:8px 10px;font-size:11px;font-weight:500;color:var(--text-2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:48px;cursor:pointer;user-select:none}
+  thead th{text-align:right;padding:8px 10px;font-size:11px;font-weight:500;color:var(--text-2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:3;box-shadow:0 1px 0 var(--border);cursor:pointer;user-select:none}
   thead th:hover{color:var(--text)}
   tbody td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   tbody tr:last-child td{border-bottom:none}
@@ -327,6 +327,7 @@
         <h1 data-ar="الشهادات والرخص" data-en="Certificates & Licenses">الشهادات والرخص</h1>
         <p data-ar="جميع الوثائق الرسمية للشركة في مكان واحد" data-en="All official company documents in one place">جميع الوثائق الرسمية للشركة في مكان واحد</p>
       </div>
+      <button onclick="openCertReport()" style="padding:8px 16px;border:1px solid var(--border);border-radius:20px;background:var(--card);font-size:12px;font-weight:600;cursor:pointer;color:var(--blue-dk);white-space:nowrap" data-ar="👁️ عرض التقرير" data-en="👁️ View Report">👁️ عرض التقرير</button>
     </div>
 
     <div id="cert-cards-container"></div>
@@ -341,6 +342,7 @@ let DATA=[], sortKey='days', sortDir=1, donutChart=null;
 const MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 
 const GH_RAW="https://raw.githubusercontent.com/HamadAlzaben/Government-live-dashboard/main/";
+const GH_BLOB="https://github.com/HamadAlzaben/Government-live-dashboard/blob/main/";
 const MONTHS_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const CERT_I18N={"شهادة الزكاة – ZATCA": {"te": "ZATCA Certificate", "ee": "Zakat, Tax and Customs Authority"}, "شهادة الإقامة الضريبية": {"te": "Tax Residency Certificate", "ee": "Zakat, Tax and Customs Authority"}, "شهادة التوطين – Qiwa": {"te": "Nationalization Certificate – Qiwa", "ee": "Ministry of HR & Social Dev. · Qiwa"}, "شهادة عضوية غرفة الرياض": {"te": "Riyadh Chamber Membership", "ee": "Riyadh Chamber of Commerce"}, "ترخيص الاستثمار – MISA": {"te": "Investment License – MISA", "ee": "Ministry of Investment"}, "شهادة SME": {"te": "SME Certificate", "ee": "Small & Medium Enterprises Authority"}, "السجل التجاري – CR32": {"te": "Commercial Registration – CR32", "ee": "Ministry of Commerce"}, "ترخيص التدريب – TVTC": {"te": "Training License – TVTC", "ee": "Technical & Vocational Training Corp."}, "شهادة GOSI – التأمينات": {"te": "GOSI – Social Insurance Certificate", "ee": "General Organization for Social Insurance"}, "العنوان الوطني": {"te": "National Address", "ee": "Saudi Post SPL"}, "السجل التجاري – CR42": {"te": "Commercial Registration – CR42", "ee": "Ministry of Commerce"}};
 const CERT_ST2CLS={'حرج':'red','قريب':'amber','ساري':'green','بدون تاريخ':'gray'};
@@ -429,7 +431,7 @@ function renderCerts(){
       const lblI=currentLang==='ar'?'تاريخ الإصدار':'Issue Date';
       const lblE=currentLang==='ar'?'تاريخ الانتهاء':'Expiry Date';
       const dBadge=days===null?'':`<span class="badge b-${cls}">${days} ${currentLang==='ar'?'يوم':'days'}</span>`;
-      const btn=d.cPdf?`<a class="link-btn" style="margin-top:4px;font-size:11px;padding:6px 12px" href="${encodeURI(GH_RAW+d.cPdf)}" target="_blank">${currentLang==='ar'?'📄 عرض الشهادة':'📄 View Certificate'}</a>`:'';
+      const btn=d.cPdf?`<div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap"><a class="link-btn" style="font-size:11px;padding:6px 12px;margin-top:0" href="${encodeURI(GH_BLOB+d.cPdf)}" target="_blank" rel="noopener" data-f="${d.cPdf}" onclick="return openFast(event,this.dataset.f)">${currentLang==='ar'?'👁️ عرض':'👁️ View'}</a><a style="display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);color:var(--blue-dk);text-decoration:none;font-weight:500" href="${encodeURI(GH_RAW+d.cPdf)}" target="_blank" rel="noopener">${currentLang==='ar'?'⬇️ تنزيل':'⬇️ Download'}</a></div>`:'';
       html+=`<div class="cert-card status-${cls}"><div class="cert-top"><div><div class="cert-name">${title}</div><div class="cert-entity">${issuer}</div></div><span class="badge b-${cls}">${translateStatus(st)}</span></div><div class="cert-num">${d.cNum||''}</div><div class="cert-dates"><div class="cert-date-box"><div class="cert-date-lbl">${lblI}</div><div class="cert-date-val">${d.cDate||'—'}</div></div><div class="cert-date-box"><div class="cert-date-lbl">${lblE}</div><div class="cert-date-val" style="color:${dayColor(days)}">${exp}</div></div></div><div class="cert-footer"><span class="cert-cr">${d.cFoot||''}</span>${dBadge}</div>${btn}</div>`;
     });
     html+=`</div>`;
@@ -603,6 +605,48 @@ function toggleLang() {
   render();
 }
 
+
+function openCertReport(){
+  const isEn=currentLang==='en';
+  const HEX={red:'#E24B4A',amber:'#EF9F27',green:'#639922',gray:'#888780'};
+  const HEXLT={red:'#FCEBEB',amber:'#FAEEDA',green:'#EAF3DE',gray:'#F1EFE8'};
+  const HEXDK={red:'#A32D2D',amber:'#854F0B',green:'#3B6D11',gray:'#5F5E5A'};
+  const ST2CLS={'حرج':'red','قريب':'amber','ساري':'green','بدون تاريخ':'gray'};
+  const cards=DATA.filter(d=>d.cGrp);
+  let cA=0,cS=0,cC=0,cN=0;
+  cards.forEach(d=>{const s=calcStatus(calcDaysLeft(d.expRaw));if(s==='ساري')cA++;else if(s==='قريب')cS++;else if(s==='حرج')cC++;else cN++;});
+  const today=new Date();const todayStr=isEn?toEnglishDate(today):toArabicDate(today);
+  const L={title:isEn?'Certificates & Licenses Report':'تقرير الشهادات والرخص',org:'ميرك / Meirc',date:isEn?'Report date':'تاريخ التقرير',total:isEn?'Total':'الإجمالي',active:isEn?'Active':'ساري',soon:isEn?'Due soon':'قريب',crit:isEn?'Critical':'حرج',nod:isEn?'No date':'بدون تاريخ',cert:isEn?'Certificate':'الشهادة',issuer:isEn?'Issuer':'الجهة المُصدِرة',num:isEn?'Number':'الرقم',issue:isEn?'Issue Date':'تاريخ الإصدار',exp:isEn?'Expiry Date':'تاريخ الانتهاء',status:isEn?'Status':'الحالة',days:isEn?'Days':'الأيام',print:isEn?'🖨️ Print':'🖨️ طباعة',vo:isEn?'View only — nothing is downloaded':'للعرض فقط — لا يُنزَّل أي ملف'};
+  const stTxt={red:isEn?'Critical':'حرج',amber:isEn?'Due soon':'قريب',green:isEn?'Active':'ساري',gray:isEn?'No date':'بدون تاريخ'};
+  let sections='';
+  ['CR32','CR42'].forEach(g=>{
+    const gc=cards.filter(d=>d.cGrp===g); if(!gc.length)return;
+    const hd=CERT_HEADERS[g]; let rows='';
+    gc.forEach(d=>{
+      const days=calcDaysLeft(d.expRaw),st=calcStatus(days),cls=ST2CLS[st]||'gray';
+      let exp='—'; if(d.expRaw instanceof Date)exp=isEn?toEnglishDate(d.expRaw):toArabicDate(d.expRaw); else if(typeof d.expRaw==='number')exp=isEn?toEnglishDate(excelDateToJS(d.expRaw)):toArabicDate(excelDateToJS(d.expRaw));
+      const i18n=CERT_I18N[d.cName]||{}; const title=isEn?(i18n.te||d.cName):d.cName; const issuer=isEn?(i18n.ee||d.cIss):d.cIss;
+      const numv=(d.cNum||'').replace(/^[^:：]*[:：]\s*/,'');
+      rows+=`<tr><td><b>${title}</b></td><td>${issuer}</td><td class="mono">${numv}</td><td>${d.cDate||'—'}</td><td>${exp}</td><td><span class="st" style="background:${HEXLT[cls]};color:${HEXDK[cls]}">${stTxt[cls]}</span></td><td class="c">${days===null?'—':days}</td></tr>`;
+    });
+    sections+=`<h2>${isEn?hd.en:hd.ar}</h2><table><thead><tr><th>${L.cert}</th><th>${L.issuer}</th><th>${L.num}</th><th>${L.issue}</th><th>${L.exp}</th><th>${L.status}</th><th>${L.days}</th></tr></thead><tbody>${rows}</tbody></table>`;
+  });
+  const align=isEn?'left':'right';
+  const html=`<!DOCTYPE html><html lang="${isEn?'en':'ar'}" dir="${isEn?'ltr':'rtl'}"><head><meta charset="utf-8"><title>${L.title}</title><style>@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap');*{box-sizing:border-box;margin:0;padding:0}body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:#1a1a18;background:#fff;padding:34px;font-size:13px;line-height:1.5}.head{border-bottom:2px solid #185FA5;padding-bottom:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px}.head h1{font-size:20px;color:#185FA5}.meta{font-size:12px;color:#6b6a66}.summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}.chip{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid #E0DDD6}h2{font-size:15px;margin:22px 0 8px;color:#185FA5}table{width:100%;border-collapse:collapse}th{background:#F7F6F3;text-align:${align};padding:8px 10px;font-size:11px;color:#6b6a66;border-bottom:2px solid #E0DDD6;white-space:nowrap}td{padding:8px 10px;border-bottom:1px solid #E0DDD6;text-align:${align};vertical-align:top}td.mono{font-family:monospace;font-size:11px}td.c{text-align:center}.st{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}.toolbar{position:fixed;top:14px;${isEn?'right':'left'}:14px;display:flex;gap:8px;align-items:center}.toolbar button{padding:8px 16px;border:none;border-radius:8px;background:#185FA5;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}.toolbar .n{font-size:11px;color:#6b6a66;background:#F7F6F3;padding:5px 9px;border-radius:6px}@media print{.toolbar{display:none}body{padding:0}}</style></head><body><div class="toolbar"><button onclick="window.print()">${L.print}</button><span class="n">${L.vo}</span></div><div class="head"><div><h1>📄 ${L.title}</h1><div class="meta">${L.org} · حمد الزبن</div></div><div class="meta">${L.date}: ${todayStr}</div></div><div class="summary"><span class="chip">${L.total}: ${cards.length}</span><span class="chip" style="background:#EAF3DE;color:#3B6D11">${L.active}: ${cA}</span><span class="chip" style="background:#FAEEDA;color:#854F0B">${L.soon}: ${cS}</span><span class="chip" style="background:#FCEBEB;color:#A32D2D">${L.crit}: ${cC}</span><span class="chip" style="background:#F1EFE8;color:#5F5E5A">${L.nod}: ${cN}</span></div>${sections}</body></html>`;
+  const w=window.open('','_blank');
+  if(!w){alert(isEn?'Please allow pop-ups to view the report.':'فضلاً اسمح بالنوافذ المنبثقة لعرض التقرير.');return;}
+  w.document.open();w.document.write(html);w.document.close();
+}
+
+function openFast(ev,file){
+  const w=window.open('about:blank','_blank');
+  if(!w)return true;
+  w.document.write('<!doctype html><meta charset="utf-8"><title>عرض الشهادة</title><body style="margin:0;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;color:#888">جارٍ فتح الشهادة…</body>');
+  fetch(GH_RAW+encodeURI(file)).then(function(r){if(!r.ok)throw new Error('h');return r.blob();})
+    .then(function(b){w.location.href=URL.createObjectURL(new Blob([b],{type:'application/pdf'}));})
+    .catch(function(){try{w.location.href=encodeURI(GH_BLOB+file);}catch(e){}});
+  return false;
+}
 </script>
 </body>
 </html>
